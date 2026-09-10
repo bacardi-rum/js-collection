@@ -1,5 +1,5 @@
 {
-  "name": "js-collection",
+  "name": "@cinnamons/js-collection",
   "version": "1.0.0",
   "description": "A collection library imitating Java written by TS.",
   "homepage": "https://github.com/bacardi-rum/js-collection#readme",
