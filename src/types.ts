@@ -7,9 +7,15 @@ interface Display {
 }
 
 interface IntoIterator<E> {
-  descendingIterator: () => IterableIterator<E, void, E | undefined>;
-  iterator: () => IterableIterator<E, void, E | undefined>;
+  descendingIterator: () => IterableIteratorLike<E>;
+  iterator: () => IterableIteratorLike<E>;
 }
+
+type IterableLike<E> = Iterable<E, void, E | undefined>;
+
+type IteratorLike<E> = Iterator<E, void, E | undefined>;
+
+type IterableIteratorLike<E> = IterableIterator<E, void, E | undefined>;
 
 type UnaryOperator<E> = (element: E) => E;
 
@@ -33,4 +39,7 @@ export type {
   Mapper,
   Reducer,
   IntoIterator,
+  IterableLike,
+  IterableIteratorLike,
+  IteratorLike,
 };

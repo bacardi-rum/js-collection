@@ -1,5 +1,5 @@
 import ArrayList from "./array-list.ts";
-import type { Clonable } from "../types.ts";
+import type { Clonable, IterableIteratorLike, IterableLike, IteratorLike } from "../types.ts";
 import type { List } from "./types.ts";
 import Stream, { type Stream as S } from "../stream/index.ts";
 
@@ -14,7 +14,7 @@ class LinkedList<E> implements List<E>, Clonable<LinkedList<E>> {
   private tail: LinkedListNode<E>;
   private length: number = 0;
 
-  constructor(iterable?: Iterable<E, void, E | undefined>) {
+  constructor(iterable?: IterableLike<E>) {
     this.head = {
       next: null,
       prev: null,
@@ -28,7 +28,7 @@ class LinkedList<E> implements List<E>, Clonable<LinkedList<E>> {
     this.addAll(iterable ?? []);
   }
 
-  *[Symbol.iterator](): Iterator<E, void, E | undefined> {
+  *[Symbol.iterator](): IteratorLike<E> {
     let p = this.head.next!; // must be tail or LinkedListNode
     // must be LinkedListNode
     while (p.next && p.prev) {
@@ -61,7 +61,7 @@ class LinkedList<E> implements List<E>, Clonable<LinkedList<E>> {
     return true;
   }
 
-  public addAll(iterable: Iterable<E, void, E | undefined>, index = this.length): boolean {
+  public addAll(iterable: IterableLike<E>, index = this.length): boolean {
     if (index < 0 || index > this.length) return false;
     const list = ArrayList.of(iterable);
     if (list.isEmpty()) return false;
@@ -240,7 +240,7 @@ class LinkedList<E> implements List<E>, Clonable<LinkedList<E>> {
     return [...this];
   }
 
-  public *iterator(): IterableIterator<E, void, E | undefined> {
+  public *iterator(): IterableIteratorLike<E> {
     let p = this.head.next!; // must be tail or LinkedListNode
     // must be LinkedListNode
     while (p.next && p.prev) {
@@ -250,7 +250,7 @@ class LinkedList<E> implements List<E>, Clonable<LinkedList<E>> {
     }
   }
 
-  public *descendingIterator(): IterableIterator<E, void, E | undefined> {
+  public *descendingIterator(): IterableIteratorLike<E> {
     let p = this.tail.prev!; // must be tail or LinkedListNode
     // must be LinkedListNode
     while (p.next && p.prev) {
@@ -264,7 +264,7 @@ class LinkedList<E> implements List<E>, Clonable<LinkedList<E>> {
     return this.length;
   }
 
-  public static of<E>(iterable?: Iterable<E, void, E | undefined>): LinkedList<E> {
+  public static of<E>(iterable?: IterableLike<E>): LinkedList<E> {
     return new LinkedList(iterable);
   }
 }

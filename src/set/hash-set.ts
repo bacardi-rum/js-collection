@@ -1,17 +1,19 @@
 import Stream, { type Stream as S, type Streamable } from "../stream/index.ts";
-import type { Clonable, Display, IntoIterator } from "../types.ts";
+import type {
+  Clonable,
+  Display,
+  IntoIterator,
+  IterableIteratorLike,
+  IterableLike,
+  IteratorLike,
+} from "../types.ts";
 
 class HashSet<E>
-  implements
-    IntoIterator<E>,
-    Iterable<E, void, E | undefined>,
-    Display,
-    Clonable<HashSet<E>>,
-    Streamable<E>
+  implements IntoIterator<E>, IterableLike<E>, Display, Clonable<HashSet<E>>, Streamable<E>
 {
   private set = new Set<E>();
 
-  constructor(iterable?: Iterable<E, void, E | undefined>) {
+  constructor(iterable?: IterableLike<E>) {
     this.addAll(iterable ?? []);
   }
 
@@ -43,7 +45,7 @@ class HashSet<E>
     this.set.clear();
   }
 
-  public *iterator(): IterableIterator<E, void, E | undefined> {
+  public *iterator(): IterableIteratorLike<E> {
     for (const value of this.set.values()) {
       yield value;
     }
@@ -58,14 +60,14 @@ class HashSet<E>
     return [...this.set.values()];
   }
 
-  public addAll(iterable: Iterable<E, void, E | undefined>): boolean {
+  public addAll(iterable: IterableLike<E>): boolean {
     const array = [...iterable];
     const hasChanged = array.some((element) => !this.set.has(element));
     array.forEach((element) => this.set.add(element));
     return hasChanged;
   }
 
-  public retainAll(iterable: Iterable<E, void, E | undefined>): boolean {
+  public retainAll(iterable: IterableLike<E>): boolean {
     const array = [...iterable];
     const intersection = array.filter((element) => this.set.has(element));
     const hasChanged = intersection.length > 0 && intersection.length < this.set.size;
@@ -77,7 +79,7 @@ class HashSet<E>
     return hasChanged;
   }
 
-  public removeAll(iterable: Iterable<E, void, E | undefined>): boolean {
+  public removeAll(iterable: IterableLike<E>): boolean {
     const array = [...iterable];
     const hasChanged = array.some((element) => this.set.has(element));
     array.forEach((element) => {
@@ -92,7 +94,7 @@ class HashSet<E>
     return [...this].toString();
   }
 
-  *[Symbol.iterator](): Iterator<E, void, E | undefined> {
+  *[Symbol.iterator](): IteratorLike<E> {
     for (const value of this.set.values()) {
       yield value;
     }
@@ -102,7 +104,7 @@ class HashSet<E>
     return new HashSet(this);
   }
 
-  public static of<E>(iterable?: Iterable<E, void, E | undefined>): HashSet<E> {
+  public static of<E>(iterable?: IterableLike<E>): HashSet<E> {
     return new HashSet(iterable);
   }
 

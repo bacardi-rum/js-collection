@@ -1,9 +1,9 @@
-import type { Consumer, Predicate, Mapper, Reducer } from "../types.ts";
+import type { Consumer, Predicate, Mapper, Reducer, IterableLike } from "../types.ts";
 import { ArrayList, LinkedList } from "../list/index.ts";
 import { Collectors, type Stream as S } from "./types.ts";
 
 class Stream<E> implements S<E> {
-  constructor(private iterable: Iterable<E, void, E | undefined>) {}
+  constructor(private iterable: IterableLike<E>) {}
 
   map<T>(mapFn: Mapper<E, T>): Stream<T> {
     return new Stream<T>([...this.iterable].map((e) => mapFn(e)));

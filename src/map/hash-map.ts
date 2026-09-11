@@ -1,43 +1,49 @@
 import HashSet from "../set/index.ts";
 import Stream, { type Stream as S, type Streamable } from "../stream/index.ts";
-import type { Clonable, Consumer, Display, IntoIterator, Mapper, Reducer } from "../types.ts";
+import type {
+  Clonable,
+  Consumer,
+  Display,
+  IntoIterator,
+  IterableIteratorLike,
+  IterableLike,
+  IteratorLike,
+  Mapper,
+  Reducer,
+} from "../types.ts";
 
 type HashMapEntry<K, V> = [K, V];
 
 class HashMap<K, V>
   implements
     IntoIterator<HashMapEntry<K, V>>,
-    Iterable<HashMapEntry<K, V>, void, HashMapEntry<K, V> | undefined>,
+    IterableLike<HashMapEntry<K, V>>,
     Display,
     Clonable<HashMap<K, V>>,
     Streamable<HashMapEntry<K, V>>
 {
   private map = new Map<K, V>();
 
-  constructor(iterable?: Iterable<HashMapEntry<K, V>, void, HashMapEntry<K, V> | undefined>) {
+  constructor(iterable?: IterableLike<HashMapEntry<K, V>>) {
     for (const [key, value] of iterable ?? []) {
       this.put(key, value);
     }
   }
 
-  *descendingIterator(): IterableIterator<
-    HashMapEntry<K, V>,
-    void,
-    HashMapEntry<K, V> | undefined
-  > {
+  *descendingIterator(): IterableIteratorLike<HashMapEntry<K, V>> {
     const entries = [...this.map.entries()];
     for (let i = entries.length - 1; i >= 0; i--) {
       yield entries[i];
     }
   }
 
-  *iterator(): IterableIterator<HashMapEntry<K, V>, void, HashMapEntry<K, V> | undefined> {
+  *iterator(): IterableIteratorLike<HashMapEntry<K, V>> {
     for (const entry of this.map.entries()) {
       yield entry;
     }
   }
 
-  *[Symbol.iterator](): Iterator<HashMapEntry<K, V>, void, HashMapEntry<K, V> | undefined> {
+  *[Symbol.iterator](): IteratorLike<HashMapEntry<K, V>> {
     yield* this.map.entries();
   }
 
@@ -180,9 +186,7 @@ class HashMap<K, V>
     return `{${[...this.map.entries()].map(([key, value]) => `${key}=${value}`).join(",")}}`;
   }
 
-  public static of<K, V>(
-    iterable?: Iterable<HashMapEntry<K, V>, void, HashMapEntry<K, V> | undefined>,
-  ): HashMap<K, V> {
+  public static of<K, V>(iterable?: IterableLike<HashMapEntry<K, V>>): HashMap<K, V> {
     return new HashMap(iterable);
   }
 

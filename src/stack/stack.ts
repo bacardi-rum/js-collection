@@ -1,9 +1,10 @@
 import { LinkedList } from "../list/index.ts";
+import type { IterableLike } from "../types.ts";
 
 class Stack<E> {
   private stack = new LinkedList<E>();
 
-  constructor(iterable?: Iterable<E, void, E | undefined>) {
+  constructor(iterable?: IterableLike<E>) {
     this.stack.addAll(iterable ?? []);
   }
 

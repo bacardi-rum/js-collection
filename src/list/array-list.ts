@@ -1,11 +1,20 @@
-import type { Clonable, Comparator, Consumer, Predicate, UnaryOperator } from "../types.ts";
+import type {
+  Clonable,
+  Comparator,
+  Consumer,
+  IterableIteratorLike,
+  IterableLike,
+  IteratorLike,
+  Predicate,
+  UnaryOperator,
+} from "../types.ts";
 import Stream, { type Stream as S } from "../stream/index.ts";
 import type { List } from "./types.ts";
 
 class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
   private array: E[] = [];
 
-  constructor(iterable?: Iterable<E, void, E | undefined>) {
+  constructor(iterable?: IterableLike<E>) {
     this.array.push(...(iterable ?? []));
   }
 
@@ -13,7 +22,7 @@ class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
     return new Stream<E>(this.array);
   }
 
-  *[Symbol.iterator](): Iterator<E, void, E | undefined> {
+  *[Symbol.iterator](): IteratorLike<E> {
     for (const element of this.array) {
       yield element;
     }
@@ -29,7 +38,7 @@ class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
     return true;
   }
 
-  public addAll(iterable: Iterable<E, void, E | undefined>, index = this.array.length): boolean {
+  public addAll(iterable: IterableLike<E>, index = this.array.length): boolean {
     if (index < 0 || index > this.array.length) return false;
     this.array.splice(index, 0, ...iterable);
     return true;
@@ -51,7 +60,7 @@ class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
     return this.array.indexOf(element);
   }
 
-  public removeAll(iterable: Iterable<E, void, E | undefined>): boolean {
+  public removeAll(iterable: IterableLike<E>): boolean {
     const set = new Set<E>(iterable);
     const newArr = this.array.filter((element) => !set.has(element));
     const hasChanged = newArr.length !== this.array.length;
@@ -112,7 +121,7 @@ class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
     return this.array.lastIndexOf(element);
   }
 
-  public retainAll(iterable: Iterable<E, void, E | undefined>): boolean {
+  public retainAll(iterable: IterableLike<E>): boolean {
     const set = new Set<E>(iterable);
     const newArr = this.array.filter((element) => set.has(element));
     const hasChanged = newArr.length !== this.array.length;
@@ -120,7 +129,7 @@ class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
     return hasChanged;
   }
 
-  public containsAll(iterable: Iterable<E, void, E | undefined>): boolean {
+  public containsAll(iterable: IterableLike<E>): boolean {
     const set = new Set<E>(this.array);
     return [...iterable].every((element) => set.has(element));
   }
@@ -147,17 +156,17 @@ class ArrayList<E> implements List<E>, Clonable<ArrayList<E>> {
     this.array.forEach((element) => action(element));
   }
 
-  public static of<E>(iterable?: Iterable<E, void, E | undefined>) {
+  public static of<E>(iterable?: IterableLike<E>) {
     return new ArrayList(iterable);
   }
 
-  public *iterator(): IterableIterator<E, void, E | undefined> {
+  public *iterator(): IterableIteratorLike<E> {
     for (const item of this.array) {
       yield item;
     }
   }
 
-  public *descendingIterator(): IterableIterator<E, void, E | undefined> {
+  public *descendingIterator(): IterableIteratorLike<E> {
     for (let i = this.array.length - 1; i >= 0; i--) {
       yield this.array[i];
     }

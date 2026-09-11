@@ -1,7 +1,7 @@
 import type { ArrayList, LinkedList } from "../list/index.ts";
-import type { Mapper, Predicate, Reducer, Consumer } from "../types.ts";
+import type { Mapper, Predicate, Reducer, Consumer, IterableLike } from "../types.ts";
 
-interface Streamable<E> extends Iterable<E, void, E | undefined> {
+interface Streamable<E> extends IterableLike<E> {
   stream: () => Stream<E>;
 }
 
